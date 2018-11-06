@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	 version="3.1">
+    <session-config>
+        <session-timeout>
+            120
+        </session-timeout>
+    </session-config>
+    <error-page>
+  	<error-code>500</error-code>
+        <location>/view/public/erro.jsp</location>
+    </error-page>
+    <welcome-file-list>
+        <welcome-file>/view/public/index.jsp</welcome-file>
+    </welcome-file-list>
+    <context-param>
+        <param-name>upload.location</param-name>
+        <param-value>/home/juniorrek/calluaArquivos/</param-value>
+    </context-param>
+</web-app>
