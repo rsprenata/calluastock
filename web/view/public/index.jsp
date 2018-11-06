@@ -27,11 +27,11 @@
                                 <div class="card-body">
                                     <form id="formLogin" action="${pageContext.request.contextPath}/Login?op=logar" method="POST">
                                         <div class="form-group">
-                                            <label for="login">CPF</label>
+                                            <label for="login">CPF:</label>
                                             <input type="text" name="cpf" class="form-control cpf" autofocus>
                                         </div>
                                         <div class="form-group">
-                                            <label for="senha">Senha</label>
+                                            <label for="senha">Senha:</label>
                                             <input type="password" name="senha" class="form-control">
                                         </div>
                                         <div class="form-group text-center">

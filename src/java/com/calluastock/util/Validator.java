@@ -6,11 +6,9 @@
 package com.calluastock.util;
 
 import com.calluastock.bean.Usuario;
-import com.calluastock.bean.Endereco;
-import com.calluastock.facade.ClienteFacade;
+import com.calluastock.facade.UsuarioFacade;
+import java.math.BigDecimal;
 import java.util.InputMismatchException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -18,6 +16,28 @@ import java.util.regex.Pattern;
  * Classe auxiliar para fazer as validações back-end do sistema
  */
 public class Validator {
+    public static Mensagem validarValor(BigDecimal valor) {
+        Mensagem mensagem = null;
+        
+        if (valor == null) {
+            mensagem = new Mensagem("Valor é obrigatório !!!");
+        }
+        
+        return mensagem;
+    }
+
+    public static Mensagem validarDescricao(String descricao) {
+        Mensagem mensagem = null;
+        
+        if (descricao== null || "".equals(descricao)) {
+            mensagem = new Mensagem("Descrição é obrigatória !!!");
+        } else if (descricao.length() > 1024) {
+            mensagem = new Mensagem("No máximo 1024 caracteres na descrição !!!");
+        }
+        
+        return mensagem;
+    }
+
     public static Mensagem validarSenha(String senha, String confirmacaoSenha) {
         Mensagem mensagem = null;
         

@@ -3,7 +3,7 @@
     Created on : Oct 22, 2018, 4:36:27 PM
     Author     : renata
 --%>
-<footer class="bg-secondary">
+<footer class="bg-info">
     <div class="container">
         <div class="row">
             <div class="col-md-4">

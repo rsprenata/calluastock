@@ -1,4 +1,4 @@
-package com.calluastockstock.facade;
+package com.calluastock.facade;
 
 import com.calluastock.bean.Usuario;
 import com.calluastock.dao.UsuarioDao;

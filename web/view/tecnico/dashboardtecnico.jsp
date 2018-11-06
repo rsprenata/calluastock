@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" errorPage="../public/erro.jsp"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="${sessionScope.logado == null}">
-    <jsp:useBean id="mensagem" class="com.callua.util.Mensagem">
+    <jsp:useBean id="mensagem" class="com.calluastock.util.Mensagem">
         <jsp:setProperty name="mensagem" property="texto" value="Acesso nÃ£o autorizado"/>
         <jsp:setProperty name="mensagem" property="tipo" value="error"/>
     </jsp:useBean>
@@ -30,13 +30,9 @@
         <main role="main">
             <div class="py-5 bg-light">
             <div class="container">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <a class="btn btn-primary" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
-                            </div>
-                        </div>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
                     </div>
                 </div>
             </div>

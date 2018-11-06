@@ -5,15 +5,10 @@
  */
 package com.calluastock.servlet;
 
-import com.calluastock.bean.Chamado;
-import com.calluastock.bean.StatusChamado;
-import com.calluastock.facade.ChamadoFacade;
-import com.calluastock.facade.LoginFacade;
-import com.calluastock.util.Login;
+import com.calluastock.bean.Usuario;
+import com.calluastock.facade.UsuarioFacade;
 import com.calluastock.util.Mensagem;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

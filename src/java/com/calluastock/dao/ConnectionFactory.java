@@ -1,4 +1,4 @@
-package com.calluastockstock.dao;
+package com.calluastock.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +10,7 @@ public class ConnectionFactory {
     public Connection getConnection() {
         try {
             Class.forName("org.postgresql.Driver");
-            return DriverManager.getConnection("jdbc:postgresql://localhost/calluastock", "postgres", "postgres");
+            return DriverManager.getConnection("jdbc:postgresql://localhost:5432/calluastock", "postgres", "postgres");
         } catch (SQLException exception) { 
             System.out.println("Erro ao conectar no banco: " + exception);
         } catch (ClassNotFoundException ex) {

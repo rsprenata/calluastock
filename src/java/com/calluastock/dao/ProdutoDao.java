@@ -1,38 +1,56 @@
 package com.calluastock.dao;
 
-import com.calluastock.bean.Usuario;
-import com.calluastock.dao.ConnectionFactory;
-import java.math.BigInteger;
-import java.security.MessageDigest;
+import com.calluastock.bean.Produto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UsuarioDao {
-    public Usuario loginValido(String cpf, String senha) {
+public class ProdutoDao {
+    public void adicionarUm(Produto produto) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("INSERT INTO Produto (descricao, valor) VALUES (?, ?)");
+            stmt.setString(1, produto.getDescricao());
+            stmt.setBigDecimal(2, produto.getValor());
+            stmt.executeUpdate();
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+    }
+
+    public List<Produto> buscarTodos() {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Usuario usuario = null;
+        List<Produto> produtos = new ArrayList<Produto>();
         
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(senha.getBytes(), 0, senha.length());
-            senha = new BigInteger(1, md.digest()).toString(16);
-
-            stmt = connection.prepareStatement("SELECT * FROM usuario WHERE cpf = ? AND senha = ?");
-            stmt.setString(1, cpf);
-            stmt.setString(2, senha);
+            stmt = connection.prepareStatement("SELECT * FROM Produto");
             rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Produto produto = new Produto();
                 
-            if (rs.next()) {
-                usuario = new Usuario();
-                usuario.setId(rs.getInt("id"));
-                usuario.setNome(rs.getString("nome"));
-                usuario.setCpf(rs.getString("cpf"));
-                usuario.setAdministrador(rs.getBoolean("administrador"));
+                produto.setId(rs.getInt("id"));
+                produto.setDescricao(rs.getString("descricao"));
+                produto.setValor(rs.getBigDecimal("valor"));
+                
+                
+                produtos.add(produto);
             }
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());
@@ -48,87 +66,28 @@ public class UsuarioDao {
                 catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
         }
         
-        return usuario;
+        return produtos;
     }
 
-    public Usuario carregarUm(Integer id) {
+    public Produto buscarUm(Integer id) {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         Connection connection = connectionFactory.getConnection();
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Usuario usuario = null;
+        Produto produto = null;
         
         try {
-            stmt = connection.prepareStatement("SELECT * FROM Usuario WHERE id = ?");
+            stmt = connection.prepareStatement("SELECT * FROM Produto WHERE id = ?");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
-                
-            if (rs.next()) {
-                usuario = new Usuario();
-                usuario.setId(rs.getInt("id"));
-                usuario.setNome(rs.getString("nome"));
-                usuario.setCpf(rs.getString("cpf"));
-                usuario.setAdministrador(rs.getBoolean("administrador"));
-            }
-        } catch (SQLException exception) {
-            throw new RuntimeException("Erro. Origem="+exception.getMessage());
-        } finally {
-            if (rs != null)
-                try { rs.close(); }
-                catch (SQLException exception) { System.out.println("Erro ao fechar rs. Ex="+exception.getMessage()); }
-            if (stmt != null)
-                try { stmt.close(); }
-                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
-            if (connection != null)
-                try { connection.close(); }
-                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
-        }
-        
-        return usuario;
-    }
-    
-    public void adicionarUm(Usuario usuario) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        Connection connection = connectionFactory.getConnection();
-        PreparedStatement stmt = null;
-        
-        try {
-            stmt = connection.prepareStatement("INSERT INTO Usuario (nome, cpf, administrador) VALUES "
-                + "(?, ?, ?)");
-            stmt.setString(1, usuario.getNome());
-            stmt.setString(2, usuario.getCpf());
-            stmt.setBoolean(3, usuario.isAdministrador());
-            
-            stmt.executeUpdate();
-        } catch (SQLException exception) {
-            throw new RuntimeException("Erro. Origem="+exception.getMessage());
-        } finally {
-            if (stmt != null)
-                try { stmt.close(); }
-                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
-            if (connection != null)
-                try { connection.close(); }
-                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
-        }
-    }
 
-    public boolean senhaAtualValida(Usuario usuario, String senhaAtual) {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        Connection connection = connectionFactory.getConnection();
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(senhaAtual.getBytes(), 0, senhaAtual.length());
-            senhaAtual= new BigInteger(1, md.digest()).toString(16);
-            
-            stmt = connection.prepareStatement("SELECT * FROM Usuario WHERE id = ? AND senha = ?");
-            stmt.setInt(1, usuario.getId());
-            stmt.setString(2, senhaAtual);
-            rs = stmt.executeQuery();
+            if (rs.next()) {
+                produto = new Produto();
                 
-            return rs.next();
+                produto.setId(rs.getInt("id"));
+                produto.setDescricao(rs.getString("descricao"));
+                produto.setValor(rs.getBigDecimal("valor"));
+            }
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());
         } finally {
@@ -142,5 +101,79 @@ public class UsuarioDao {
                 try { connection.close(); }
                 catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
         }
+        
+        return produto;
+    }
+
+    public void editarUm(Produto produto) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("UPDATE Produto SET descricao = ?, valor = ? WHERE id = ?");
+            stmt.setString(1, produto.getDescricao());
+            stmt.setBigDecimal(2, produto.getValor());
+            stmt.setInt(3, produto.getId());
+            stmt.executeUpdate();
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+    }
+
+    public void removerUm(Integer id) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("DELETE FROM Produto WHERE id = ?");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+    }
+
+    public Integer proximoCod() {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = connection.prepareStatement("SELECT MAX(id)+1 AS proximoCod FROM Produto");
+            rs = stmt.executeQuery();
+            
+            if (rs.next())
+                return rs.getInt("proximoCod");
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar rs. Ex="+exception.getMessage()); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+        return null;
     }
 }
