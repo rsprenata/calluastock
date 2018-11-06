@@ -30,14 +30,10 @@
         <main role="main">
             <div class="py-5 bg-light">
             <div class="container">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row text-center">
-                            <div class="col-md-12">
-                                <a class="btn btn-primary" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
-                                <a class="btn btn-warning" href="${pageContext.request.contextPath}/Usuario?op=listar">Usuários</a>
-                            </div>
-                        </div>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
+                        <a class="btn btn-warning" href="${pageContext.request.contextPath}/Usuario?op=listar">Usuários</a>
                     </div>
                 </div>
             </div>

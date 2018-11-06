@@ -10,5 +10,13 @@ CREATE TABLE Usuario (
 	administrador BOOLEAN,
 
 	PRIMARY KEY (id),
-	UNIQUE (cpfCnpj)
+	UNIQUE (cpf)
+);
+
+CREATE TABLE Produto (
+	id SERIAL,
+	descricao VARCHAR(128),
+	valor DECIMAL(4,2),
+
+	PRIMARY KEY (id)
 );
