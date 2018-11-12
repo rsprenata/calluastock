@@ -2,6 +2,7 @@ package com.calluastock.facade;
 
 import com.calluastock.bean.Usuario;
 import com.calluastock.dao.UsuarioDao;
+import java.util.List;
 
 
 public class UsuarioFacade {
@@ -21,5 +22,17 @@ public class UsuarioFacade {
 
     public static boolean senhaAtualValida(Usuario usuario, String senhaAtual) {
         return UDAO.senhaAtualValida(usuario, senhaAtual);
+    }
+
+    public static List<Usuario> buscarTodosMenosUm(Usuario um) {
+        return UDAO.buscarTodosMenosUm(um);
+    }
+
+    public static void removerUm(Integer id) {
+        UDAO.removerUm(id);
+    }
+
+    public static void editarUm(Usuario produto) {
+        UDAO.editarUm(produto);
     }
 }

@@ -8,7 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="pt-BR" />  
-<c:if test="${sessionScope.logado == null || sessionScope.logado == null}">
+<c:if test="${sessionScope.logado == null || !sessionScope.logado.administrador}">
     <jsp:useBean id="mensagem" class="com.calluastock.util.Mensagem">
         <jsp:setProperty name="mensagem" property="texto" value="Acesso não autorizado"/>
         <jsp:setProperty name="mensagem" property="tipo" value="error"/>
@@ -35,24 +35,26 @@
             <div class="container">
                 <div class="row">
                 <div class="col-md-12 order-md-1">
-                     <h4 class="mb-3">Lista de produtos</h4>
+                     <h4 class="mb-3">Lista de usuários</h4>
                     <div class="form-group">
-                        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalAdicionarProduto">Novo Produto</button>
+                        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#modalAdicionarUsuario">Novo Usuário</button>
                     </div>
-                    <table id="tableProdutos" class="table">
+                    <table id="tableUsuarios" class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Código</th>
-                                <th scope="col">Descrição</th>
-                                <th scope="col">Valor</th>
+                                <th style="display: none;">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col">CPF</th>
+                                <th scope="col">Admin</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${produtos}" var="produto">
+                            <c:forEach items="${usuarios}" var="usuario">
                             <tr>
-                                <td scope="row">${produto.id}</td>
-                                <td>${produto.descricao}</td>
-                                <td><fmt:formatNumber value="${produto.valor}" type="currency" /></td>
+                                <td style="display: none;">${usuario.id}</td>
+                                <td scope="row">${usuario.nome}</td>
+                                <td class="cpf">${usuario.cpf}</td>
+                                <td>${usuario.administrador == true ? 'Sim' : 'Não'}</td>
                             </tr>
                             </c:forEach>
                         </tbody>
@@ -65,30 +67,36 @@
         </main>
                     
 
-        <form id="formEditarProduto" action="${pageContext.request.contextPath}/Produto?op=editarUm" method="POST">
-        <div class="modal fade" id="modalVisualizarProduto" tabindex="-1" role="dialog" aria-labelledby="modalVisualizarProdutoLabel" aria-hidden="true">
+        <form id="formEditarUsuario" action="${pageContext.request.contextPath}/Usuario?op=editarUm" method="POST">
+        <div class="modal fade" id="modalVisualizarUsuario" tabindex="-1" role="dialog" aria-labelledby="modalVisualizarUsuarioLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <input type="hidden" id="idProduto" name="idProduto">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <b>Código: </b><p id="mpCodigo" class="d-inline"></p>
-                            </div>
-                        </div>
+                        <input type="hidden" id="idUsuario" name="idUsuario">
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label for="descricao">Descrição</label>
-                                    <textarea type="text" id="descricao" name="descricao" class="form-control" placeholder="Descrição" rows="3">${produto.descricao}</textarea>
+                                    <label for="descricao">Nome</label>
+                                    <input type="text" id="nome" name="nome" class="form-control" val="${usuario.nome}"/>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label for="login">Valor</label>
-                                    <input type="text" id="valor" name="valor" class="form-control dinheiro" val="${produto.valor.replace("\\.", ",")}">
+                                    <label for="cpf">CPF</label>
+                                    <input type="text" id="cpf" name="cpf" class="form-control cpf" val="${usuario.cpf}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <div class="form-group">
+                                    <label for="administrador">Função</label>
+                                    <select class="form-control" id="administrador" name="administrador">
+                                        <option value="false" ${usuario.administrador == true ? '' : 'selected'}>Técnico</option>
+                                        <option value="true" ${usuario.administrador == true ? 'selected' : ''}>Administrador</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -103,31 +111,35 @@
         </div>
         </form>
 
-        <form id="formAdicionarProduto" action="${pageContext.request.contextPath}/Produto?op=adicionarUm" method="POST">
-        <div class="modal fade" id="modalAdicionarProduto" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarProdutoLabel" aria-hidden="true">
+        <form id="formAdicionarUsuario" action="${pageContext.request.contextPath}/Usuario?op=adicionarUm" method="POST">
+        <div class="modal fade" id="modalAdicionarUsuario" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarUsuarioLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label>Código: ${proximoCod}</label>
+                                    <label>Nome</label>
+                                    <input type="text" name="nome" class="form-control" />
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label">Descrição</label>
-                                    <textarea type="text" name="descricao" class="form-control" placeholder="Descrição" rows="3"></textarea>
+                                    <label>CPF</label>
+                                    <input type="text" name="cpf" class="form-control cpf" />
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label>Valor</label>
-                                    <input type="text" name="valor" class="form-control dinheiro">
+                                    <label>Função</label>
+                                    <select class="form-control" name="administrador">
+                                        <option value="false">Técnico</option>
+                                        <option value="true">Administrador</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -156,33 +168,35 @@
         <script>
             $(document).ready( function () {
                 <c:if test="${not empty produto}">
-                    $('#modalAdicionarProduto').modal("show");
+                    $('#modalAdicionarUsuario').modal("show");
                 </c:if>
 
-                var table = $('#tableProdutos').DataTable({
+                var table = $('#tableUsuarios').DataTable({
                     "language": {
                         "url": "${pageContext.request.contextPath}/resources/DataTables/Portuguese-Brasil.json"
                     }
                 });
                 
-                $('#tableProdutos tbody').on('click', 'tr', function () {
+                $('#tableUsuarios tbody').on('click', 'tr', function () {
                     var tab = table.row( this ).data();
-                    var url = "Produto";
+                    var url = "Usuario";
                     var context = '${pageContext.request.contextPath}';
                     $.ajax({
                         url : url, // URL da sua Servlet
                         data : {
                             op: "carregarUmViaAjax",
-                            idProduto : tab[0]
+                            idUsuario : tab[0]
                         }, // Parâmetro passado para a Servlet
                         dataType : 'json',
                         success : function(data) {
-                            $('#modalVisualizarProduto #idProduto').val(data.id);
-                            $('#modalVisualizarProduto #mpCodigo').html(data.id);
-                            $('#modalVisualizarProduto #descricao').html(data.descricao);
-                            $('#modalVisualizarProduto #valor').val(data.valor.toLocaleString('pt-br'));
-                            $('#modalVisualizarProduto #linkRemover').attr("href", context+"/Produto?op=removerUm&idProduto="+data.id);
-                            $('#modalVisualizarProduto').modal("show");
+                            $('#modalVisualizarUsuario #idUsuario').val(data.id);
+                            $('#modalVisualizarUsuario #nome').val(data.nome);
+                            $('#modalVisualizarUsuario #cpf').val(data.cpf);
+                            $('#cpf').trigger('input');
+                            if (data.administrador) $('#modalVisualizarUsuario #administrador').val("true");
+                            else $('#modalVisualizarUsuario #administrador').val("false");
+                            $('#modalVisualizarUsuario #linkRemover').attr("href", context+"/Usuario?op=removerUm&idUsuario="+data.id);
+                            $('#modalVisualizarUsuario').modal("show");
                         },
                         error : function(request, textStatus, errorThrown) {
                             alert(request.status + ', Error: ' + request.statusText);
@@ -191,23 +205,24 @@
                     });
                 } );
                 
-                $("#formAdicionarProduto").validate({
+                $("#formAdicionarUsuario").validate({
                     rules: {
-                        descricao: {
+                        nome: {
                             required: true,
-                            maxlength: 1024
+                            maxlength: 128
                         },
-                        valor: {
-                            required: true
+                        cpf: {
+                            required: true,
+                            cpfValido: true
                         }
                     },
                     messages: {
-                        descricao: {
-                            required: "Descrição é obrigatória !!!",
-                            maxlength: "No máximo 1024 caracteres na descrição!!!"
+                        nome: {
+                            required: "Nome é obrigatório !!!",
+                            maxlength: "No máximo 128 caracteres no nome !!!"
                         },
-                        valor: {
-                            required: "Valor é obrigatório !!!"
+                        cpf: {
+                            required: "CPF é obrigatório !!!"
                         }
                     },
                     submitHandler: function(form) {
@@ -215,23 +230,24 @@
                     }
                 });
                 
-                $("#formEditarProduto").validate({
+                $("#formEditarUsuario").validate({
                     rules: {
-                        descricao: {
+                        nome: {
                             required: true,
-                            maxlength: 1024
+                            maxlength: 128
                         },
-                        valor: {
-                            required: true
+                        cpf: {
+                            required: true,
+                            cpfValido: true
                         }
                     },
                     messages: {
-                        descricao: {
-                            required: "Descrição é obrigatória !!!",
-                            maxlength: "No máximo 1024 caracteres na descrição!!!"
+                        nome: {
+                            required: "Nome é obrigatório !!!",
+                            maxlength: "No máximo 128 caracteres no nome !!!"
                         },
-                        valor: {
-                            required: "Valor é obrigatório !!!"
+                        cpf: {
+                            required: "CPF é obrigatório !!!"
                         }
                     },
                     submitHandler: function(form) {
