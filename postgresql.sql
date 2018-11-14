@@ -20,3 +20,18 @@ CREATE TABLE Produto (
 
 	PRIMARY KEY (id)
 );
+
+/**********
+* INSERTS *
+**********/
+
+INSERT INTO Usuario (nome, cpf, senha, administrador) VALUES ('Renata Soares Pereira', '09683644970', '123', true );
+
+
+INSERT INTO Produto (descricao, valor) VALUES ('Conversor USB para Serial', 10.90 );
+INSERT INTO Produto (descricao, valor) VALUES ('SSD 120GB Sandisk SSD Plus 310MB/530MB/s 20X', 500.90 );
+INSERT INTO Produto (descricao, valor) VALUES ('Fonte ATX 350W reais C3Tech PS-350 24 pinos c/ chave', 50.99 );
+INSERT INTO Produto (descricao, valor) VALUES ('Teclado e mouse com fio Logitech Desktop MK120', 59.00 );
+INSERT INTO Produto (descricao, valor) VALUES ('Placa de rede D-Link', 108.90 );
+INSERT INTO Produto (descricao, valor) VALUES ('Bateria chumbo-acido Unipower UP1270E, 12V, 7Ah, F187', 200.00 );
+INSERT INTO Produto (descricao, valor) VALUES ('Álcool isopropílico puro, Isopropanol Implastec, 110ml', 10.90 );
