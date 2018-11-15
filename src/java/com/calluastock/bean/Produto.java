@@ -41,4 +41,13 @@ public class Produto implements java.io.Serializable {
     public void setValor(BigDecimal valor) {
     	this.valor = valor;
     }
+    
+    @Override
+    public boolean equals(Object anObject) {
+        if (!(anObject instanceof Produto)) {
+            return false;
+        }
+        Produto produto = (Produto)anObject;
+        return produto.getId().equals(this.getId());
+    }
 }
