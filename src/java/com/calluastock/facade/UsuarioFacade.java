@@ -16,8 +16,8 @@ public class UsuarioFacade {
         return UDAO.carregarUm(id);
     }
 
-    public static void adicionarUm(Usuario usuario) {
-        UDAO.adicionarUm(usuario);
+    public static void adicionarUm(Usuario usuario, String url) {
+        UDAO.adicionarUm(usuario, url);
     }
 
     public static boolean senhaAtualValida(Usuario usuario, String senhaAtual) {
@@ -34,5 +34,13 @@ public class UsuarioFacade {
 
     public static void editarUm(Usuario produto) {
         UDAO.editarUm(produto);
+    }
+
+    public static Boolean alterarSenhaTokenValido(String token, Integer idUsuario) {
+        return UDAO.alterarSenhaTokenValido(token, idUsuario);
+    }
+
+    public static void alterarSenha(Usuario usuario) {
+        UDAO.alterarSenha(usuario);
     }
 }

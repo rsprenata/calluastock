@@ -9,6 +9,8 @@ import com.calluastock.bean.Usuario;
 import com.calluastock.facade.UsuarioFacade;
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -92,6 +94,20 @@ public class Validator {
         return mensagem;
     }
     
+    public static Mensagem validarEmail(String email) {
+        Mensagem mensagem = null;
+        
+        if (email== null || "".equals(email)) {
+            mensagem = new Mensagem("Email é obrigatório !!!");
+        } else if (email.length() > 128) {
+            mensagem = new Mensagem("No máximo 128 caracteres no email !!!");
+        } else if (!Validator.emailValido(email)) {
+            mensagem = new Mensagem("Email inválido !!!");
+        }
+        
+        return mensagem;
+    }
+    
     public static boolean cpfValido(String CPF) {
         // considera-se erro CPF's formados por uma sequencia de numeros iguais
         if (CPF.equals("00000000000") ||
@@ -146,5 +162,19 @@ public class Validator {
         } catch (InputMismatchException erro) {
             return(false);
         }
+    }
+    
+    public static boolean emailValido(String email)
+    {
+        boolean isEmailIdValid = false;
+        if (email != null && email.length() > 0) {
+            String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(email);
+            if (matcher.matches()) {
+                isEmailIdValid = true;
+            }
+        }
+        return isEmailIdValid;
     }
 }

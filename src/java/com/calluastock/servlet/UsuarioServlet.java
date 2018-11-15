@@ -53,7 +53,8 @@ public class UsuarioServlet extends HttpServlet {
         if (session != null)
             logado = (Usuario)session.getAttribute("logado");
         
-        if (logado != null) {
+        if ("criarSenhaForm".equals(op) || "criarSenha".equals(op) ||
+                logado != null) {
             switch(op) {
                 case "listar":
                     listar(request, response);
@@ -69,6 +70,12 @@ public class UsuarioServlet extends HttpServlet {
                     break;
                 case "editarUm":
                     editarUm(request, response);
+                    break;
+                case "criarSenhaForm":
+                    criarSenhaForm(request, response);
+                    break;
+                case "criarSenha":
+                    criarSenha(request, response);
                     break;
             }
         } else {
@@ -124,8 +131,9 @@ public class UsuarioServlet extends HttpServlet {
         Mensagem mensagem = formValido(request, usuario);
         HttpSession session = request.getSession(false);
         if (mensagem == null) {
-            UsuarioFacade.adicionarUm(usuario);
-            mensagem = new Mensagem("Usuario adicionado com sucesso !!!");
+            String url = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+            UsuarioFacade.adicionarUm(usuario, url);
+            mensagem = new Mensagem("Usuario adicionado com sucesso !!! O usuário recebeu um email para criação da senha.");
             mensagem.setTipo("success");
             session.setAttribute("mensagem", mensagem);
             response.sendRedirect("Usuario?op=listar");
@@ -158,12 +166,65 @@ public class UsuarioServlet extends HttpServlet {
         }
     }
     
+    public void criarSenhaForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String token = request.getParameter("token");
+        Integer idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        if (UsuarioFacade.alterarSenhaTokenValido(token, idUsuario)) {
+            Usuario usuario = UsuarioFacade.carregarUm(idUsuario);
+            
+            request.setAttribute("usuario", usuario);
+            
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/view/tecnico/criarsenha.jsp");
+            rd.forward(request, response);
+        } else {
+            Mensagem mensagem = new Mensagem("Token de validação inválido.");
+            mensagem.setTipo("error");
+            HttpSession session = request.getSession();
+            session.setAttribute("mensagem", mensagem);
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/view/public/index.jsp");
+            rd.forward(request, response);
+        }
+    }
+    
+    public void criarSenha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Usuario usuario = new Usuario();
+        Integer idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        usuario.setId(idUsuario);
+        usuario.setSenha(request.getParameter("senha"));
+        Mensagem mensagem = Validator.validarSenha(usuario.getSenha(), request.getParameter("confirmacaoSenha"));
+        String token = request.getParameter("token");
+        if (UsuarioFacade.alterarSenhaTokenValido(token, idUsuario)) {
+            mensagem = new Mensagem("Token de validação inválido.");
+        }
+        if (mensagem == null) {
+            UsuarioFacade.alterarSenha(usuario);
+            mensagem = new Mensagem("Senha criada com sucesso !!!");
+            mensagem.setTipo("success");
+            HttpSession session = request.getSession();
+            session.setAttribute("mensagem", mensagem);
+            response.sendRedirect("view/public/index.jsp");
+        } else {
+            mensagem.setTipo("error");
+            HttpSession session = request.getSession();
+            session.setAttribute("mensagem", mensagem);
+            request.setAttribute("usuario", usuario);
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/Tecnico?op=criarSenhaForm&token="
+                                                                                + token
+                                                                                + "&idUsuario="
+                                                                                + usuario.getId()
+                                                                                + "&cpfUsuario="
+                                                                                + usuario.getCpf());
+            rd.forward(request, response);
+        }
+    }
+    
     public Usuario carregarUsuario(HttpServletRequest request) {
         Usuario usuario = new Usuario();
         
         usuario.setNome(request.getParameter("nome"));
         usuario.setCpf(request.getParameter("cpf"));
         if (usuario.getCpf() != null) usuario.setCpf(usuario.getCpf().replaceAll("\\W", ""));
+        usuario.setEmail(request.getParameter("email"));
         if(request.getParameter("administrador") == null || "".equals(request.getParameter("administrador")) || "false".equals(request.getParameter("administrador"))) {
             usuario.setAdministrador(false);
         } else {
@@ -177,6 +238,9 @@ public class UsuarioServlet extends HttpServlet {
         Mensagem mensagem = Validator.validarNome(usuario.getNome());
         if (mensagem == null) {
             mensagem = Validator.validarCpf(usuario.getCpf());
+            if (mensagem == null) {
+                mensagem = Validator.validarEmail(usuario.getEmail());
+            }
         }
         
         return mensagem;

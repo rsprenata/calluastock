@@ -21,6 +21,13 @@ CREATE TABLE Produto (
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE AlterarSenhaToken (
+	idUsuario INT,
+	token VARCHAR(128)
+);
+
+ALTER TABLE Usuario ADD COLUMN email VARCHAR(128);
+
 /**********
 * INSERTS *
 **********/

@@ -92,6 +92,14 @@
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" class="form-control" val="${usuario.email}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <div class="form-group">
                                     <label for="administrador">Função</label>
                                     <select class="form-control" id="administrador" name="administrador">
                                         <option value="false" ${usuario.administrador == true ? '' : 'selected'}>Técnico</option>
@@ -129,6 +137,14 @@
                                 <div class="form-group">
                                     <label>CPF</label>
                                     <input type="text" name="cpf" class="form-control cpf" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -214,6 +230,11 @@
                         cpf: {
                             required: true,
                             cpfValido: true
+                        },
+                        email:  {
+                            required: true,
+                            email: true,
+                            maxlength: 128
                         }
                     },
                     messages: {
@@ -223,6 +244,11 @@
                         },
                         cpf: {
                             required: "CPF é obrigatório !!!"
+                        },
+                        email : {
+                            required: "Email é obrigatório !!!",
+                            email: "Email inválido !!!",
+                            maxlength: "No máximo 128 caracteres no email !!!"
                         }
                     },
                     submitHandler: function(form) {
@@ -239,6 +265,11 @@
                         cpf: {
                             required: true,
                             cpfValido: true
+                        },
+                        email:  {
+                            required: true,
+                            email: true,
+                            maxlength: 128
                         }
                     },
                     messages: {
@@ -248,6 +279,11 @@
                         },
                         cpf: {
                             required: "CPF é obrigatório !!!"
+                        },
+                        email : {
+                            required: "Email é obrigatório !!!",
+                            email: "Email inválido !!!",
+                            maxlength: "No máximo 128 caracteres no email !!!"
                         }
                     },
                     submitHandler: function(form) {

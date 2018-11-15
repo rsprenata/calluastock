@@ -13,6 +13,7 @@ public class Usuario implements java.io.Serializable {
 	private Integer id;
 	private String nome;
 	private String cpf;
+        private String email;
 	private String senha;
     private boolean administrador;
     
@@ -40,6 +41,14 @@ public class Usuario implements java.io.Serializable {
 
     public void setCpf(String cpf) {
     	this.cpf = cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSenha() {
