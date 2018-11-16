@@ -36,6 +36,7 @@ public class UsuarioDao {
                 usuario.setId(rs.getInt("id"));
                 usuario.setCpf(rs.getString("cpf"));
                 usuario.setNome(rs.getString("nome"));
+                usuario.setEmail(rs.getString("email"));
                 usuario.setAdministrador(rs.getBoolean("administrador"));
                 
                 usuarios.add(usuario);
@@ -79,6 +80,7 @@ public class UsuarioDao {
                 usuario.setId(rs.getInt("id"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setCpf(rs.getString("cpf"));
+                usuario.setEmail(rs.getString("email"));
                 usuario.setAdministrador(rs.getBoolean("administrador"));
             }
         } catch (Exception exception) {
@@ -115,6 +117,7 @@ public class UsuarioDao {
                 usuario.setId(rs.getInt("id"));
                 usuario.setNome(rs.getString("nome"));
                 usuario.setCpf(rs.getString("cpf"));
+                usuario.setEmail(rs.getString("email"));
                 usuario.setAdministrador(rs.getBoolean("administrador"));
             }
         } catch (SQLException exception) {
@@ -143,11 +146,12 @@ public class UsuarioDao {
         try {
             connection.setAutoCommit(false);
             
-            stmt = connection.prepareStatement("INSERT INTO Usuario (nome, cpf, administrador) VALUES "
-                + "(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            stmt = connection.prepareStatement("INSERT INTO Usuario (nome, cpf, email, administrador) VALUES "
+                + "(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getCpf());
-            stmt.setBoolean(3, usuario.isAdministrador());
+            stmt.setString(3, usuario.getEmail());
+            stmt.setBoolean(4, usuario.isAdministrador());
             
             int affectedRows = stmt.executeUpdate();
 
@@ -260,11 +264,12 @@ public class UsuarioDao {
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement("UPDATE Usuario SET cpf = ?, nome = ?, administrador = ? WHERE id = ?");
+            stmt = connection.prepareStatement("UPDATE Usuario SET cpf = ?, nome = ?, email = ?, administrador = ? WHERE id = ?");
             stmt.setString(1, usuario.getCpf());
             stmt.setString(2, usuario.getNome());
-            stmt.setBoolean(3, usuario.isAdministrador());
-            stmt.setInt(4, usuario.getId());
+            stmt.setString(3, usuario.getEmail());
+            stmt.setBoolean(4, usuario.isAdministrador());
+            stmt.setInt(5, usuario.getId());
             stmt.executeUpdate();
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());
@@ -340,6 +345,45 @@ public class UsuarioDao {
             if (stmt != null)
                 try { stmt.close(); }
                 catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+    }
+    
+    public void editarDados(Usuario usuario) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            if (!"".equals(usuario.getSenha())) {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.update(usuario.getSenha().getBytes(), 0, usuario.getSenha().length());
+                usuario.setSenha(new BigInteger(1, md.digest()).toString(16));
+            
+                stmt = connection.prepareStatement("UPDATE Usuario SET nome = ?, cpf = ?,"
+                        + "email = ?, senha = ? WHERE id = ?");
+                stmt.setString(1, usuario.getNome());
+                stmt.setString(2, usuario.getCpf());
+                stmt.setString(3, usuario.getEmail());
+                stmt.setBoolean(4, usuario.isAdministrador());
+                stmt.setString(5, usuario.getSenha());
+                stmt.setInt(6, usuario.getId());
+                stmt.executeUpdate();
+            } else {
+                stmt = connection.prepareStatement("UPDATE Usuario SET nome = ?, cpf = ?,"
+                        + "email = ? WHERE id = ?");
+                stmt.setString(1, usuario.getNome());
+                stmt.setString(2, usuario.getCpf());
+                stmt.setString(3, usuario.getEmail());
+                stmt.setBoolean(4, usuario.isAdministrador());
+                stmt.setInt(5, usuario.getId());
+                stmt.executeUpdate();
+            }
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
             if (connection != null)
                 try { connection.close(); }
                 catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }

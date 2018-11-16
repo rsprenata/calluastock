@@ -17,6 +17,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="logadoDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${logado.nome}</a>
                         <div class="dropdown-menu" aria-labelledby="logadoDropdown">
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Usuario?op=dadosForm">Dados cadastrais</a>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Login?op=logout">Sair</a>
                         </div>
                     </li>
@@ -27,6 +29,9 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="logadoDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${logado.nome}</a>
                         <div class="dropdown-menu" aria-labelledby="logadoDropdown">
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Usuario?op=listar">Usuarios</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Usuario?op=dadosForm">Dados cadastrais</a>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Login?op=logout">Sair</a>
                         </div>
                     </li>

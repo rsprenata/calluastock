@@ -43,4 +43,9 @@ public class UsuarioFacade {
     public static void alterarSenha(Usuario usuario) {
         UDAO.alterarSenha(usuario);
     }
+
+    //necessário pois atualiza os dados e senha e não o nivel acesso.
+    public static void editarDados(Usuario usuario) {
+        UDAO.editarDados(usuario);
+    }
 }

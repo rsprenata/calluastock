@@ -45,6 +45,7 @@
                                 <th style="display: none;">ID</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col">CPF</th>
+                                <th scope="col">Email</th>
                                 <th scope="col">Admin</th>
                             </tr>
                         </thead>
@@ -54,6 +55,7 @@
                                 <td style="display: none;">${usuario.id}</td>
                                 <td scope="row">${usuario.nome}</td>
                                 <td class="cpf">${usuario.cpf}</td>
+                                <td>${usuario.email}</td>
                                 <td>${usuario.administrador == true ? 'Sim' : 'Não'}</td>
                             </tr>
                             </c:forEach>
@@ -208,6 +210,7 @@
                             $('#modalVisualizarUsuario #idUsuario').val(data.id);
                             $('#modalVisualizarUsuario #nome').val(data.nome);
                             $('#modalVisualizarUsuario #cpf').val(data.cpf);
+                            $('#modalVisualizarUsuario #email').val(data.email);
                             $('#cpf').trigger('input');
                             if (data.administrador) $('#modalVisualizarUsuario #administrador').val("true");
                             else $('#modalVisualizarUsuario #administrador').val("false");
