@@ -32,6 +32,7 @@
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Produto?op=listar">Produtos</a>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Usuario?op=listar">Usuarios</a>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Usuario?op=dadosForm">Dados cadastrais</a>
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/Relatorio?op=listar">Relatórios</a>
                             <a class="dropdown-item" href="${pageContext.request.contextPath}/Login?op=logout">Sair</a>
                         </div>
                     </li>
