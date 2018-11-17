@@ -45,6 +45,7 @@
                                 <th scope="col">Código</th>
                                 <th scope="col">Descrição</th>
                                 <th scope="col">Valor</th>
+                                <th scope="col">Quantidade</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,6 +54,7 @@
                                 <td scope="row">${produto.id}</td>
                                 <td>${produto.descricao}</td>
                                 <td><fmt:formatNumber value="${produto.valor}" type="currency" /></td>
+                                <td>${produto.quantidade}</td>
                             </tr>
                             </c:forEach>
                         </tbody>
@@ -87,8 +89,16 @@
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="form-group">
-                                    <label for="login">Valor</label>
+                                    <label for="valor">Valor</label>
                                     <input type="text" id="valor" name="valor" class="form-control dinheiro" val="${produto.valor.replace("\\.", ",")}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <div class="form-group">
+                                    <label for="quantidade">Quantidade</label>
+                                    <input type="number" id="quantidade" name="quantidade" class="form-control" val="${produto.quantidade}">
                                 </div>
                             </div>
                         </div>
@@ -128,6 +138,14 @@
                                 <div class="form-group">
                                     <label>Valor</label>
                                     <input type="text" name="valor" class="form-control dinheiro">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class=" col-md-12">
+                                <div class="form-group">
+                                    <label for="quantidade">Quantidade</label>
+                                    <input type="number" id="quantidade" name="quantidade" class="form-control" val="${produto.quantidade}">
                                 </div>
                             </div>
                         </div>
@@ -181,6 +199,7 @@
                             $('#modalVisualizarProduto #mpCodigo').html(data.id);
                             $('#modalVisualizarProduto #descricao').html(data.descricao);
                             $('#modalVisualizarProduto #valor').val(data.valor.toLocaleString('pt-br'));
+                            $('#modalVisualizarProduto #quantidade').val(data.quantidade);
                             $('#modalVisualizarProduto #linkRemover').attr("href", context+"/Produto?op=removerUm&idProduto="+data.id);
                             $('#modalVisualizarProduto').modal("show");
                         },
@@ -199,6 +218,10 @@
                         },
                         valor: {
                             required: true
+                        },
+                        quantidade: {
+                            required: true,
+                            min: 0
                         }
                     },
                     messages: {
@@ -208,6 +231,10 @@
                         },
                         valor: {
                             required: "Valor é obrigatório !!!"
+                        },
+                        quantidade: {
+                            required: "Quantidade é obrigatório !!!",
+                            min: "Quantidade deve ser maior que 0 !!!"
                         }
                     },
                     submitHandler: function(form) {
@@ -223,6 +250,10 @@
                         },
                         valor: {
                             required: true
+                        },
+                        quantidade: {
+                            required: true,
+                            min: 0
                         }
                     },
                     messages: {
@@ -232,6 +263,10 @@
                         },
                         valor: {
                             required: "Valor é obrigatório !!!"
+                        },
+                        quantidade: {
+                            required: "Quantidade é obrigatório !!!",
+                            min: "Quantidade deve ser maior que 0 !!!"
                         }
                     },
                     submitHandler: function(form) {

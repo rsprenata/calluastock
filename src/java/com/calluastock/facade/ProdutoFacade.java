@@ -16,12 +16,20 @@ public class ProdutoFacade {
         return PDAO.buscarTodos();
     }
 
+    public static List<Produto> buscarDisponiveis() {
+        return PDAO.buscarDisponiveis();
+    }
+
     public static Produto buscarUm(Integer id) {
         return PDAO.buscarUm(id);
     }
 
     public static void editarUm(Produto produto) {
         PDAO.editarUm(produto);
+    }
+
+    public static void utilizar(Produto produto, Integer quantidade) {
+        PDAO.utilizar(produto, quantidade);
     }
 
     public static void removerUm(Integer id) {

@@ -162,6 +162,7 @@ public class ProdutoServlet extends HttpServlet {
         produto.setDescricao(request.getParameter("descricao"));
         if (request.getParameter("valor") != null && !"".equals(request.getParameter("valor")))
             produto.setValor(new BigDecimal(request.getParameter("valor").replaceAll("\\.", "").replaceAll(",", ".")));
+        produto.setQuantidade(Integer.parseInt(request.getParameter("quantidade")));
            
         return produto;
     }
@@ -170,6 +171,9 @@ public class ProdutoServlet extends HttpServlet {
         Mensagem mensagem = Validator.validarDescricao(Produto.getDescricao());
         if (mensagem == null) {
             mensagem = Validator.validarValor(Produto.getValor());
+            if (mensagem == null) {
+                mensagem = Validator.validarQuantidade(Produto.getQuantidade());
+            }
         }
         
         return mensagem;

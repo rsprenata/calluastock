@@ -15,9 +15,10 @@ public class ProdutoDao {
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement("INSERT INTO Produto (descricao, valor) VALUES (?, ?)");
+            stmt = connection.prepareStatement("INSERT INTO Produto (descricao, valor, quantidade) VALUES (?, ?, ?)");
             stmt.setString(1, produto.getDescricao());
             stmt.setBigDecimal(2, produto.getValor());
+            stmt.setInt(3, produto.getQuantidade());
             stmt.executeUpdate();
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());
@@ -48,7 +49,45 @@ public class ProdutoDao {
                 produto.setId(rs.getInt("id"));
                 produto.setDescricao(rs.getString("descricao"));
                 produto.setValor(rs.getBigDecimal("valor"));
+                produto.setQuantidade(rs.getInt("quantidade"));
                 
+                produtos.add(produto);
+            }
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (rs != null)
+                try { rs.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar rs. Ex="+exception.getMessage()); }
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+        
+        return produtos;
+    }
+
+    public List<Produto> buscarDisponiveis() {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Produto> produtos = new ArrayList<Produto>();
+        
+        try {
+            stmt = connection.prepareStatement("SELECT * FROM Produto WHERE quantidade > 0");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Produto produto = new Produto();
+                
+                produto.setId(rs.getInt("id"));
+                produto.setDescricao(rs.getString("descricao"));
+                produto.setValor(rs.getBigDecimal("valor"));
+                produto.setQuantidade(rs.getInt("quantidade"));
                 
                 produtos.add(produto);
             }
@@ -87,6 +126,7 @@ public class ProdutoDao {
                 produto.setId(rs.getInt("id"));
                 produto.setDescricao(rs.getString("descricao"));
                 produto.setValor(rs.getBigDecimal("valor"));
+                produto.setQuantidade(rs.getInt("quantidade"));
             }
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());
@@ -111,10 +151,33 @@ public class ProdutoDao {
         PreparedStatement stmt = null;
         
         try {
-            stmt = connection.prepareStatement("UPDATE Produto SET descricao = ?, valor = ? WHERE id = ?");
+            stmt = connection.prepareStatement("UPDATE Produto SET descricao = ?, valor = ?, quantidade = ? WHERE id = ?");
             stmt.setString(1, produto.getDescricao());
             stmt.setBigDecimal(2, produto.getValor());
-            stmt.setInt(3, produto.getId());
+            stmt.setInt(3, produto.getQuantidade());
+            stmt.setInt(4, produto.getId());
+            stmt.executeUpdate();
+        } catch (Exception exception) {
+            throw new RuntimeException("Erro. Origem="+exception.getMessage());
+        } finally {
+            if (stmt != null)
+                try { stmt.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar stmt. Ex="+exception.getMessage()); }
+            if (connection != null)
+                try { connection.close(); }
+                catch (SQLException exception) { System.out.println("Erro ao fechar conexão. Ex="+exception.getMessage()); }
+        }
+    }
+
+    public void utilizar(Produto produto, Integer quantidade) {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        Connection connection = connectionFactory.getConnection();
+        PreparedStatement stmt = null;
+        
+        try {
+            stmt = connection.prepareStatement("UPDATE Produto SET quantidade = quantidade - ? WHERE id = ?");
+            stmt.setInt(1, quantidade);
+            stmt.setInt(2, produto.getId());
             stmt.executeUpdate();
         } catch (Exception exception) {
             throw new RuntimeException("Erro. Origem="+exception.getMessage());

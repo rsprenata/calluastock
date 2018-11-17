@@ -9,10 +9,12 @@ import com.calluastock.bean.Produto;
 import com.calluastock.facade.ProdutoFacade;
 import com.google.gson.Gson;
 import java.util.List;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.GenericEntity;
@@ -39,7 +41,7 @@ public class ProdutoResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProdutos() {
-        List<Produto> produtos = ProdutoFacade.buscarTodos();
+        List<Produto> produtos = ProdutoFacade.buscarDisponiveis();
         GenericEntity<List<Produto>> lista = new GenericEntity<List<Produto>>(produtos){};
         return Response.ok().entity(lista).build();
     }
@@ -51,5 +53,20 @@ public class ProdutoResource {
         Produto produto = ProdutoFacade.buscarUm(id);
         
         return produto;
+    }
+    
+    @PUT
+    @Path("/utilizar/{codigo}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response utilizar(Produto p, @PathParam("codigo") int codigo) {
+        
+        Produto produto = ProdutoFacade.buscarUm(codigo);
+        if (produto.getQuantidade() - p.getQuantidade() < 0) {
+            return Response.serverError().build();
+        } else {
+            ProdutoFacade.utilizar(produto, p.getQuantidade());
+            return Response.ok().build();
+        }
     }
 }

@@ -12,9 +12,10 @@ import java.math.BigDecimal;
  * @author renata
  */
 public class Produto implements java.io.Serializable {
-	private Integer id;
-	private String descricao;
-	private BigDecimal valor;
+    private Integer id;
+    private String descricao;
+    private BigDecimal valor;
+    private Integer quantidade;
     
     public Produto() {}
 
@@ -40,6 +41,14 @@ public class Produto implements java.io.Serializable {
 
     public void setValor(BigDecimal valor) {
     	this.valor = valor;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
     
     @Override

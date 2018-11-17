@@ -28,6 +28,9 @@ CREATE TABLE AlterarSenhaToken (
 
 ALTER TABLE Usuario ADD COLUMN email VARCHAR(128);
 
+/*COLOCADO AQUI DIA 16/11/2018*/
+ALTER TABLE Produto ADD COLUMN quantidade INT DEFAULT 0;
+
 /**********
 * INSERTS *
 **********/
